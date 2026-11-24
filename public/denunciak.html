@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema de Ouvidoria Web</title>
+    <link rel="stylesheet" href="/assets/css/denuncia.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1><img> Sistema de Ouvidoria</h1>
+            <p>Reporte denúncias de forma segura e anônima</p>
+        </header>
+
+        <div class="card">
+            <div id="alertContainer"></div>
+
+            <!-- Indicador de Etapas -->
+            <div class="step-indicator">
+                <div class="step active">
+                    <div class="step-number">1</div>
+                    <div class="step-label">Informações</div>
+                    <div class="step-line"></div>
+                </div>
+                <div class="step">
+                    <div class="step-number">2</div>
+                    <div class="step-label">Detalhes</div>
+                    <div class="step-line"></div>
+                </div>
+                <div class="step">
+                    <div class="step-number">3</div>
+                    <div class="step-label">Evidências</div>
+                    <div class="step-line"></div>
+                </div>
+                <div class="step">
+                    <div class="step-number">4</div>
+                    <div class="step-label">Confirmação</div>
+                </div>
+            </div>
+
+            <form id="denunciaForm">
+                <!-- ETAPA 1: INFORMAÇÕES BÁSICAS -->
+                <div class="form-section active" data-step="1">
+                    <h2>Etapa 1: Informações Básicas</h2>
+
+                    <div class="info-box">
+                        <strong>✓ Segurança</strong>
+                        Todas as informações são criptografadas e armazenadas com segurança
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Tipo de Denúncia <span class="required">*</span></label>
+                            <select name="tipo" required>
+                                <option value="">-- Selecione --</option>
+                                <option value="assedio_moral">Assédio Moral</option>
+                                <option value="assedio_sexual">Assédio Sexual</option>
+                                <option value="discriminacao">Discriminação</option>
+                                <option value="fraude">Fraude</option>
+                                <option value="conflito_interesse">Conflito de Interesse</option>
+                                <option value="conduta_inadequada">Conduta Inadequada</option>
+                                <option value="furto">Furto</option>
+                                <option value="etica">Questão Ética</option>
+                                <option value="outro">Outro</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Local da Denúncia <span class="required">*</span></label>
+                            <select name="local" required>
+                                <option value="">-- Selecione --</option>
+                                <option value="producao">Produção</option>
+                                <option value="expedicao">Expedição</option>
+                                <option value="logistica">Logística</option>
+                                <option value="administrativo">Administrativo</option>
+                                <option value="externo">Externo</option>
+                                <option value="outro">Outro</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Data/Período do Ocorrido</label>
+                        <input type="text" name="data_periodo" placeholder="Ex: 01/03/2026 ou Últimas 2 semanas">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Descrição Detalhada <span class="required">*</span></label>
+                        <textarea name="descricao" placeholder="Descreva os fatos de forma clara e detalhada..." required></textarea>
+                    </div>
+
+                    <div class="form-group checkbox-group">
+                        <input type="checkbox" id="anonimato" name="anonimato" value="1" checked>
+                        <label for="anonimato">Desejo manter sigilo de minha identidade (Recomendado)</label>
+                    </div>
+                </div>
+
+                <!-- ETAPA 2: DETALHES -->
+                <div class="form-section" data-step="2">
+                    <h2>Etapa 2: Detalhes da Denúncia</h2>
+
+                    <div class="info-box">
+                        <strong>Informações sobre os envolvidos</strong>
+                        Adicione dados sobre as pessoas envolvidas na denúncia
+                    </div>
+
+                    <div class="envolvidos-container">
+                        <h3 style="margin-bottom: 15px; color: var(--gray-700);">Pessoas Envolvidas</h3>
+                        <div id="envolvidosList"></div>
+                        <button type="button" class="btn-adicionar" onclick="adicionarEnvolvido()">+ Adicionar Pessoa</button>
+                    </div>
+
+                    <div class="form-group" style="margin-top: 25px;">
+                        <label>Testemunhas</label>
+                        <textarea name="testemunhas" placeholder="Nome ou descrição das testemunhas (opcional)"></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label>A denúncia foi comunicada a alguém?</label>
+                        <div class="checkbox-group">
+                            <input type="checkbox" id="comunicado" name="comunicado" value="1">
+                            <label for="comunicado">Sim, foi comunicada</label>
+                        </div>
+                    </div>
+
+                    <div class="form-group" id="quemComunicadoGroup" style="display: none;">
+                        <label>A quem foi comunicada?</label>
+                        <input type="text" name="quem_comunicou" placeholder="Nome ou cargo da pessoa">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Impactos Relacionados</label>
+                        <div class="impacto-checkboxes">
+                            <div style="display: flex; align-items: center; gap: 8px;">
+                                <input type="checkbox" name="impacto" value="seguranca" id="imp-seguranca">
+                                <label for="imp-seguranca" style="margin: 0;">Segurança</label>
+                            </div>
+                            <div style="display: flex; align-items: center; gap: 8px;">
+                                <input type="checkbox" name="impacto" value="saude" id="imp-saude">
+                                <label for="imp-saude" style="margin: 0;">Saúde</label>
+                            </div>
+                            <div style="display: flex; align-items: center; gap: 8px;">
+                                <input type="checkbox" name="impacto" value="financeiro" id="imp-financeiro">
+                                <label for="imp-financeiro" style="margin: 0;">Financeiro</label>
+                            </div>
+                            <div style="display: flex; align-items: center; gap: 8px;">
+                                <input type="checkbox" name="impacto" value="reputacao" id="imp-reputacao">
+                                <label for="imp-reputacao" style="margin: 0;">Reputação</label>
+                            </div>
+                            <div style="display: flex; align-items: center; gap: 8px;">
+                                <input type="checkbox" name="impacto" value="ambiental" id="imp-ambiental">
+                                <label for="imp-ambiental" style="margin: 0;">Ambiental</label>
+                            </div>
+                            <div style="display: flex; align-items: center; gap: 8px;">
+                                <input type="checkbox" name="impacto" value="recursos_humanos" id="imp-rh">
+                                <label for="imp-rh" style="margin: 0;">Recursos Humanos</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ETAPA 3: EVIDÊNCIAS -->
+                <div class="form-section" data-step="3">
+                    <h2>Etapa 3: Evidências (Opcional)</h2>
+
+                    <div class="info-box">
+                        <strong>Arquivos aceitos:</strong>
+                        Imagens (JPG, PNG), Documentos (PDF, DOC), Vídeos (MP4)
+                        <br><strong>Tamanho máximo:</strong> 50MB por arquivo
+                    </div>
+
+                    <div class="form-group">
+                        <label>Envie Evidências</label>
+                        <div class="upload-area" id="uploadArea" ondrop="handleDrop(event)" ondragover="handleDragOver(event)" ondragleave="handleDragLeave(event)">
+                            <div class="upload-icon">📎</div>
+                            <p><strong>Arraste arquivos aqui</strong> ou clique para selecionar</p>
+                            <p style="font-size: 0.85rem; color: var(--gray-500); margin-top: 8px;">Máximo 50MB por arquivo</p>
+                            <input type="file" id="fileInput" name="evidencias" multiple onchange="handleFileSelect(event)">
+                        </div>
+                    </div>
+
+                    <div id="arquivosList" class="arquivos-lista"></div>
+                </div>
+
+                <!-- ETAPA 4: CONFIRMAÇÃO -->
+                <div class="form-section" data-step="4">
+                    <h2>Etapa 4: Revisão e Confirmação</h2>
+
+                    <div id="revisor" style="background: var(--gray-50); padding: 20px; border-radius: 8px; margin-bottom: 20px;"></div>
+
+                    <div class="terms-checkbox">
+                        <div class="checkbox-group">
+                            <input type="checkbox" id="terms" name="terms" required>
+                            <label for="terms">
+                                Declaro que as informações fornecidas são verdadeiras e assumo responsabilidade por denúncias falsas
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="terms-checkbox">
+                        <div class="checkbox-group">
+                            <input type="checkbox" id="politica" name="politica" required>
+                            <label for="politica">
+                                Aceito a política de não retaliação e privacidade do sistema
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- BOTÕES -->
+                <div class="buttons">
+                    <button type="button" class="btn btn-secondary" id="btnAnterior" onclick="mudarEtapa(-1)" style="display: none;">← Anterior</button>
+                    <button type="button" class="btn btn-secondary" id="btnProximo" onclick="mudarEtapa(1)">Próximo →</button>
+                    <button type="submit" id="btnEnviar" style="display: none;">✓ Enviar Denúncia</button>
+                </div>
+            </form>
+
+            <!-- MENSAGEM DE SUCESSO -->
+            <div id="sucessoDiv" style="display: none;">
+                <div class="success-message">
+                    <div class="success-icon">✅</div>
+                    <h2>Denúncia Registrada com Sucesso!</h2>
+                    <p style="color: var(--gray-600); margin: 15px 0;">Agradecemos por sua contribuição para uma empresa mais ética e transparente.</p>
+                    <div class="protocolo" id="protocoloDiv"></div>
+                    <p style="color: var(--gray-600); margin-top: 20px;">Guarde este número para acompanhar o status de sua denúncia.</p>
+                    <button type="button" class="btn" style="margin-top: 20px; max-width: 300px; margin-left: auto; margin-right: auto;" onclick="window.location.reload()">Nova Denúncia</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="/assets/script/denuncia.js"></script>
+</body>
+</html>

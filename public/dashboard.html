@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/assets/css/dashboard.css">
+    <title>Dashboard de Ouvidoria - Administração</title>
+</head>
+<body>
+    <div class="navbar">
+        <h1>📊 Dashboard de Ouvidoria</h1>
+        <div class="user-info">
+            <span id="lastUpdate" style="font-size: 0.9rem; color: var(--gray-500);"></span>
+        </div>
+    </div>
+
+    <div class="container">
+        <!-- Cabeçalho -->
+        <div class="header">
+            <h2>Visão Geral</h2>
+            <p>Acompanhe as denúncias e estatísticas em tempo real</p>
+        </div>
+
+        <!-- Cards de Estatísticas -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-label">Total de Denúncias</div>
+                <div class="stat-value" id="totalDenuncias">0</div>
+                <div class="stat-change" id="changeTotalDenuncias">↑ 0% este mês</div>
+            </div>
+
+            <div class="stat-card success">
+                <div class="stat-label">Denúncias Anônimas</div>
+                <div class="stat-value" id="anonimas">0</div>
+                <div class="stat-change" id="percentAnonimas">0%</div>
+            </div>
+
+            <div class="stat-card warning">
+                <div class="stat-label">Em Análise</div>
+                <div class="stat-value" id="emAnalise">0</div>
+                <div class="stat-change" id="percentEmAnalise">0%</div>
+            </div>
+
+            <div class="stat-card danger">
+                <div class="stat-label">Em Investigação</div>
+                <div class="stat-value" id="emInvestigacao">0</div>
+                <div class="stat-change" id="percentEmInvestigacao">0%</div>
+            </div>
+        </div>
+
+        <!-- Conteúdo Principal -->
+        <div class="content-grid">
+            <!-- Gráfico de Tipos -->
+            <div class="card">
+                <h3>Denúncias por Tipo</h3>
+                <div class="chart-container">
+                    <div class="chart-bars" id="chartTipos"></div>
+                </div>
+                <div id="listaTipos"></div>
+            </div>
+
+            <!-- Status -->
+            <div class="card">
+                <h3>Distribuição de Status</h3>
+                <div id="chartStatus"></div>
+            </div>
+        </div>
+
+        <!-- Tabela de Denúncias Recentes -->
+        <div class="card">
+            <h3>Denúncias Recentes</h3>
+            <div class="filters">
+                <select id="filterTipo" onchange="carregarDenuncias()">
+                    <option value="">Todos os tipos</option>
+                    <option value="assedio_moral">Assédio Moral</option>
+                    <option value="assedio_sexual">Assédio Sexual</option>
+                    <option value="discriminacao">Discriminação</option>
+                    <option value="fraude">Fraude</option>
+                    <option value="outro">Outro</option>
+                </select>
+                <select id="filterStatus" onchange="carregarDenuncias()">
+                    <option value="">Todos os status</option>
+                    <option value="registrada">Registrada</option>
+                    <option value="em_analise">Em Análise</option>
+                    <option value="em_investigacao">Em Investigação</option>
+                    <option value="concluida">Concluída</option>
+                </select>
+                <button onclick="carregarDenuncias()">🔄 Atualizar</button>
+            </div>
+
+            <table id="tabelaDenuncias">
+                <thead>
+                    <tr>
+                        <th>Protocolo</th>
+                        <th>Tipo</th>
+                        <th>Status</th>
+                        <th>Data</th>
+                        <th>Anonimato</th>
+                    </tr>
+                </thead>
+                <tbody id="corpoDenuncias">
+                    <tr>
+                        <td colspan="5" class="loading">Carregando denúncias...</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Rodapé -->
+        <div class="footer">
+            <p>Sistema de Ouvidoria Web v1.0 | Desenvolvido com segurança e anonimato</p>
+        </div>
+    </div>
+
+   <script src="assets/script/dashboard.js"></script>
+</body>
+</html>

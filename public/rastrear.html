@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rastrear Denúncia - Ouvidoria</title>
+    <link rel="stylesheet" href="/assets/css/rastrear.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🔍 Rastrear Denúncia</h1>
+            <p>Consulte o status de sua denúncia pelo protocolo</p>
+        </header>
+
+        <div class="card">
+            <!-- Seção de Busca -->
+            <div class="search-section">
+                <div class="alert alert-error" id="alertError"></div>
+                <div class="alert alert-info" id="alertInfo"></div>
+
+                <div class="form-group">
+                    <label>Número de Protocolo ou ID</label>
+                    <div class="input-group">
+                        <input 
+                            type="text" 
+                            id="protocolo" 
+                            placeholder="OUVI20260325140530ABC"
+                            autocomplete="off"
+                        >
+                        <button onclick="buscarDenuncia()">
+                            <span id="btnText">Buscar</span>
+                            <span id="btnLoading" class="loading" style="display: none;"></span>
+                        </button>
+                    </div>
+                </div>
+
+                <p style="font-size: 0.9rem; color: var(--gray-500); margin-top: 10px;">
+                    Digite o número de protocolo fornecido quando você registrou a denúncia
+                </p>
+            </div>
+
+            <!-- Detalhes da Denúncia -->
+            <div class="denuncia-detalhes" id="detalhes">
+                <!-- Header -->
+                <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 30px;">
+                    <div>
+                        <h2 id="protocoloHeader" style="color: var(--gray-800); margin-bottom: 10px;"></h2>
+                        <p style="color: var(--gray-500); font-size: 0.9rem;">
+                            Registrada em <span id="dataRegistro"></span>
+                        </p>
+                    </div>
+                    <div id="badgeStatus"></div>
+                </div>
+
+                <!-- Abas -->
+                <div class="tabs">
+                    <button class="tab-button active" onclick="alterarAba('resumo')">📋 Resumo</button>
+                    <button class="tab-button" onclick="alterarAba('status')">📊 Status</button>
+                    <button class="tab-button" onclick="alterarAba('evidencias')">📎 Evidências</button>
+                </div>
+
+                <!-- Aba: Resumo -->
+                <div class="tab-content active" id="abaResumo">
+                    <div class="info-grid">
+                        <div class="info-item">
+                            <div class="info-label">Tipo de Denúncia</div>
+                            <div class="info-value" id="tipoDenuncia"></div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">Local</div>
+                            <div class="info-value" id="localDenuncia"></div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">Anonimato</div>
+                            <div class="info-value" id="anonimato"></div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">Período do Ocorrido</div>
+                            <div class="info-value" id="periodoOcorrido"></div>
+                        </div>
+                    </div>
+
+                    <div class="divider"></div>
+
+                    <div>
+                        <h3>Descrição</h3>
+                        <p id="descricao" style="background: white; padding: 15px; border-radius: 8px; border-left: 4px solid var(--primary);"></p>
+                    </div>
+
+                    <div class="divider"></div>
+
+                    <div>
+                        <h3>Pessoas Envolvidas</h3>
+                        <div id="envolvidos" style="background: white; padding: 15px; border-radius: 8px;"></div>
+                    </div>
+                </div>
+
+                <!-- Aba: Status -->
+                <div class="tab-content" id="abaStatus">
+                    <div class="status-timeline">
+                        <h3>Timeline de Atualização</h3>
+                        <div class="timeline" id="timeline"></div>
+                    </div>
+
+                    <div class="divider"></div>
+
+                    <div class="info-grid">
+                        <div class="info-item">
+                            <div class="info-label">Status Atual</div>
+                            <div id="statusAtual"></div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">Última Atualização</div>
+                            <div class="info-value" id="ultimaAtualizacao"></div>
+                        </div>
+                    </div>
+
+                    <div style="background: linear-gradient(135deg, #dbeafe 0%, #e0e7ff 100%); padding: 20px; border-radius: 8px; border-left: 4px solid var(--primary); margin-top: 20px;">
+                        <p style="color: #1e40af; margin-bottom: 10px;">
+                            <strong>ℹ️ Informação Importante</strong>
+                        </p>
+                        <p style="color: #1e3a8a; font-size: 0.9rem;">
+                            O status de sua denúncia é atualizado conforme o andamento da investigação. 
+                            Investigações complexas podem levar mais tempo. Você será notificado de qualquer 
+                            alteração se forneceu um e-mail.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Aba: Evidências -->
+                <div class="tab-content" id="abaEvidencias">
+                    <div id="evidenciasContainer"></div>
+                </div>
+            </div>
+
+            <!-- Dica de Privacidade -->
+            <div style="margin-top: 40px; padding: 20px; background: var(--gray-50); border-radius: 8px; border-left: 4px solid var(--success); display: none;" id="dicaPrivacidade">
+                <p style="color: var(--gray-700); margin-bottom: 10px;">
+                    <strong>🔒 Sua Privacidade</strong>
+                </p>
+                <p style="color: var(--gray-600); font-size: 0.9rem;">
+                    Esta página usa apenas o protocolo ou ID da denúncia. 
+                    Nenhuma informação pessoal é armazenada no navegador. 
+                    Você pode fechar esta página a qualquer momento sem deixar rastros.
+                </p>
+            </div>
+        </div>
+    </div>
+    <script src="assets/script/rastrear.js"></script>
+</body>
+</html>

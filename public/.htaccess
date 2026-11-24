@@ -1,0 +1,16 @@
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    RewriteBase /
+    
+    # Permitir acesso a arquivos e pastas reais
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{REQUEST_FILENAME} !-d
+    
+    # Rotear tudo para index.html (para SPA) ou api.php (para APIs)
+    RewriteCond %{REQUEST_URI} ^/api/ [OR]
+    RewriteCond %{REQUEST_URI} ^/api$
+    RewriteRule ^.*$ api.php [QSA,L]
+    
+    # Para outros paths, rota para index.html (SPA)
+    RewriteRule ^.*$ index.html [QSA,L]
+</IfModule>
